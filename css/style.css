@@ -1,0 +1,784 @@
+
+/* =====================================================================
+   1. VARIABLES (custom properties)
+   Written once here, used many times below with var(--name).
+  ===================================================================== */
+:root {
+  --color-primary: #9c3d1a;        /* terracotta – buttons, links, headings accents */
+  --color-primary-dark: #7a2e12;   /* darker shade for hover */
+  --color-secondary: #020202;      /* header & footer */
+  --color-accent: #f2c14e;         /* warm yellow – highlights & focus ring */
+  --color-bg: #fffaf3;             /* soft cream page background */
+  --color-bg-alt: #f6ecdc;         /* slightly darker cream for every 2nd section */
+  --color-surface: #ffffff;        /* cards */
+  --color-text: #120e0c;           /* main text: very dark brown (softer than black) */
+  --color-muted: #5c514a;          /* secondary text */
+  --color-border: #767676;         /* form borders on white */
+  --color-error: #b3261e;          /* form error colour */
+
+  /* fonts */
+  --font-body: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;  
+  --font-heading: Georgia, "Times New Roman", serif;
+
+  --radius: 12px;                  /* rounded corners */
+  --shadow: 0 2px 10px rgb(0 0 0 / 0.08);
+  --max-width: 1100px;             /* content never gets wider than this */
+  --space: clamp(1rem, 3vw, 2rem); /* spacing that grows a little on bigger screens */
+
+  /* Height of the sticky header. Used so links like #menu don't hide
+     the section heading underneath the header (see "scroll-padding-top"). */
+  --header-height: 7.5rem;
+}
+
+
+
+/* box-sizing: border-box makes width include padding and border –
+   much easier to calculate layouts. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* When a nav link jumps to a section, stop this far from the top,
+     so the sticky header does not cover the section's heading. */
+  scroll-padding-top: var(--header-height);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.06rem;            /* 17px – comfortable reading size */
+  line-height: 1.6;                /* space between lines (no unit = scales with text) */
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  margin-block: 0 0.5em;           /* margin-block = top and bottom margin */
+}
+
+h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem); /* min, preferred, max: grows with screen */
+  color: var(--color-secondary);
+}
+
+/* A small decorative line under every section title */
+h2::after {
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 4px;
+  margin-top: 0.5rem;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+p {
+  margin-block: 0 1rem;
+}
+
+/* RESPONSIVE IMAGES: never wider than their box, keep their shape. */
+img {
+  display: block;                  /* removes a small gap under images */
+  max-width: 100%;
+  height: auto;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+  text-decoration-thickness: 2px;
+}
+
+mark {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+  padding: 0 0.2em;
+}
+
+
+/* =====================================================================
+   3. ACCESSIBILITY HELPERS
+   ===================================================================== */
+
+/* SKIP LINK: moved off-screen until a keyboard user tabs to it. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--color-accent);
+  color: var(--color-text);
+  font-weight: 700;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.skip-link:focus {
+  top: 0;                          /* slides into view when focused */
+}
+
+/* FOCUS RING: a thick, clear outline for keyboard users.
+   :focus-visible only shows it when using the keyboard, not when clicking. */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--color-text); /* dark edge: visible on light AND dark backgrounds */
+}
+
+/* The <main> gets focus after the skip link – no need to draw a ring around everything */
+main:focus {
+  outline: none;
+}
+
+/* Smooth scrolling for the menu links, but ONLY if the visitor has not asked
+   their device to "reduce motion" (some people get dizzy from movement). */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+
+/* =====================================================================
+   4. STICKY HEADER & NAVIGATION
+   ---------------------------------------------------------------------
+   Why is the whole HEADER sticky, not just the <nav>?
+   A sticky element only sticks while its PARENT is on screen. Our <nav>
+   lives inside <header>, so a sticky nav would scroll away together with
+   the header. Making the header itself sticky keeps the nav visible.
+   ===================================================================== */
+.site-header {
+  position: sticky;                /* scrolls normally, then STICKS... */
+  top: 0;                          /* ...when it reaches the top of the screen */
+  z-index: 10;                     /* stays above the page content */
+
+  /* CSS GRID: on phones, name on one row and nav on the next.
+     minmax(0, 1fr) matters: without it, a grid column grows to fit its widest
+     content (our long row of nav links) and the whole page becomes too wide.
+     With it, the column stays as wide as the screen and the nav scrolls sideways. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.25rem;
+
+  /* This padding trick centres the content at max-width
+     while the green background still stretches edge to edge. */
+  padding-block: 0.75rem;
+  padding-inline: max(1rem, (100% - var(--max-width)) / 2);
+
+  background-color: var(--color-secondary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.tagline {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #f3e9d8;                  /* light cream on green: good contrast */
+}
+
+/* NAVIGATION LIST
+   On phones the links sit in ONE row that you can swipe sideways.
+   That keeps the sticky header short, so it doesn't cover the page. */
+.site-header nav ul {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0 0 0.25rem;
+  list-style: none;                /* removes the bullet points */
+  overflow-x: auto;                /* sideways scrolling when there isn't room */
+  scrollbar-width: thin;
+
+  /* A soft fade on the right edge hints "there are more links – swipe!" */
+  mask-image: linear-gradient(to right, black 85%, transparent);
+}
+
+.site-header nav a {
+  display: block;
+  white-space: nowrap;             /* keep "Opening Hours" on one line */
+  padding: 0.6rem 0.8rem;          /* big enough to tap with a finger (about 44px tall) */
+  border-radius: 999px;            /* pill shape */
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.site-header nav a:hover {
+  background-color: rgb(255 255 255 / 0.15);
+  text-decoration: underline;
+}
+
+/* "Reserve a Table" stands out as a button */
+.site-header nav a.nav-cta {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.site-header nav a.nav-cta:hover {
+  background-color: #ffd977;
+}
+
+
+/* =====================================================================
+   5. SECTIONS 
+   ===================================================================== */
+main > section {
+  padding-block: calc(var(--space) * 2);
+  padding-inline: max(1rem, (100% - var(--max-width)) / 2);   /* same centring trick */
+}
+
+/* Every second section gets a slightly darker background,
+   so sections are easy to tell apart (instead of <hr> lines). */
+main > section:nth-of-type(even) {
+  background-color: var(--color-bg-alt);
+}
+
+/* A reusable "card" look for articles, the special offer and reviews */
+#menu article,
+#reviews article,
+#specials aside {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+
+/* =====================================================================
+   6. ABOUT – CSS GRID
+===================================================================== */
+#about {
+  display: grid;
+  grid-template-columns: 1fr;      /* one column */
+  column-gap: calc(var(--space) * 1.5);
+}
+
+#about img {
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+blockquote {
+  margin: 1rem 0 0;
+  padding: 1rem 1.5rem;
+  border-inline-start: 5px solid var(--color-primary);  /* line on the left */
+  background: var(--color-bg-alt);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+blockquote p {
+  margin: 0 0 0.5rem;
+}
+
+blockquote footer {
+  font-size: 1rem;
+  font-style: normal;
+  color: var(--color-muted);
+}
+
+
+/* =====================================================================
+   7. MENU – CSS GRID of dish cards
+   repeat(auto-fit, minmax(260px, 1fr)) means:
+   "fit as many columns as you can, each at least 260px wide".
+   Phone = 1 column, tablet = 2, laptop = 3. No media query needed!
+   ===================================================================== */
+#menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: var(--space);
+  align-items: start;              /* cards keep their own height */
+}
+
+/* The heading and the extras take the full width of the grid (all columns) */
+#menu > h2,
+#menu > .menu-extras {
+  grid-column: 1 / -1;             /* from the first line to the last line */
+}
+
+#menu figure {
+  margin: 0 0 1rem;
+}
+
+/* Make every dish photo the same shape, so the cards line up neatly.
+   object-fit: cover crops the photo instead of squashing it. */
+#menu figure img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: calc(var(--radius) - 4px);
+  background-color: var(--color-bg-alt);   /* shown if a photo is missing */
+  color: var(--color-muted);               /* colour of the alt text if a photo is missing */
+}
+
+#menu figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--color-muted);
+}
+
+#menu article ul {
+  padding-inline-start: 1.25rem;
+  margin: 0;
+}
+
+/* HOW TO ORDER + GLOSSARY: another small grid (side by side on wider screens) */
+.menu-extras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: var(--space);
+  margin-top: 1rem;
+}
+
+/* GLOSSARY as a 2-column grid: the word on the left, its meaning on the right */
+dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+
+dt {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+dd {
+  margin: 0;
+}
+
+
+/* =====================================================================
+   8. PRICE TABLE
+   ===================================================================== */
+
+/* The wrapper scrolls sideways on tiny screens instead of breaking the page */
+.table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  min-width: 20rem;                /* 320px: below this, the wrapper scrolls sideways */
+  border-collapse: collapse;       /* single lines between cells */
+  background: var(--color-surface);
+}
+
+caption {
+  caption-side: top;
+  text-align: left;
+  padding: 1rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: var(--color-surface);
+}
+
+th,
+td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e3d6c4;
+}
+
+thead th {
+  background-color: var(--color-secondary);
+  color: #ffffff;
+}
+
+/* Prices line up on the right – easier to compare numbers */
+th:last-child,
+td:last-child {
+  text-align: right;
+}
+
+/* Zebra stripes: every second row is shaded, so your eye can follow a row */
+tbody tr:nth-child(even) {
+  background-color: #fbf5ec;
+}
+
+tbody tr:hover {
+  background-color: #f6e7d0;
+}
+
+
+/* =====================================================================
+   9. SPECIALS, HOURS & REVIEWS
+   ===================================================================== */
+
+/* SPECIAL OFFER – an eye-catching card with a yellow stripe */
+#specials aside {
+  max-width: 40rem;
+  border-inline-start: 8px solid var(--color-accent);
+}
+
+#specials aside h3 {
+  color: var(--color-primary);
+  font-size: 1.5rem;
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+/* HOURS – CSS GRID: phone = one column; laptop = hours and address side by side */
+#hours {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem var(--space);
+}
+
+#hours ul {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+}
+
+#hours li + li {
+  margin-top: 0.5rem;
+}
+
+address {
+  font-style: normal;              /* browsers make <address> italic by default */
+  padding: var(--space);
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* phone and email links: bigger tap area */
+address a {
+  display: inline-block;
+  padding-block: 0.25rem;
+}
+
+/* REVIEWS – CSS GRID of review cards */
+#reviews {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: var(--space);
+}
+
+#reviews > h2 {
+  grid-column: 1 / -1;
+}
+
+#reviews article {
+  border-top: 5px solid var(--color-primary);
+}
+
+#reviews h3 {
+  font-size: 1.3rem;
+  color: var(--color-primary);
+}
+
+
+/* =====================================================================
+   10. RESERVATION FORM
+   ===================================================================== */
+#reserve form {
+  max-width: 48rem;
+}
+
+.form-note {
+  color: var(--color-muted);
+}
+
+.required-mark {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+fieldset {
+  margin: 0 0 1.5rem;
+  padding: var(--space);
+  border: 1px solid #d9c9b3;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+legend {
+  padding-inline: 0.5rem;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+/* Each label sits ABOVE its box (quicker to scan), with a small gap.
+   The gap between a label and its box is smaller than the gap between fields,
+   so it's clear which label belongs to which box. */
+.field {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+label {
+  font-weight: 600;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+/* Text boxes, dropdowns and the textarea */
+input,
+select,
+textarea {
+  font: inherit;                   /* use the page font, not the browser's tiny one */
+  font-size: max(1rem, 1em);       /* at least 16px: stops zooming in */
+  width: 100%;
+  min-height: 48px;                /* big enough to tap */
+  padding: 0.6rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--color-text);
+}
+
+textarea {
+  resize: vertical;                /* users can make it taller, but not wider */
+}
+
+/* VALIDATION: red border only AFTER the user has typed and left the box
+   (or pressed "Book Now"). :user-invalid doesn't shout at people before they start. */
+input:user-invalid,
+select:user-invalid,
+textarea:user-invalid {
+  border-color: var(--color-error);
+  background-color: #fdf3f2;
+}
+
+/* A text message too, so the error isn't shown by colour alone */
+.field:has(input:user-invalid)::after {
+  content: "Please check this field.";
+  color: var(--color-error);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* RADIO BUTTONS & CHECKBOXES – a nested fieldset without the card look */
+fieldset.choices {
+  border: none;
+  padding: 0;
+  margin-bottom: 1.25rem;
+  background: none;
+
+  /* CSS GRID: one column on phones; becomes a row of 3 on wider screens */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+  gap: 0.5rem;
+}
+
+fieldset.choices legend {
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Each option is a tappable "pill": the whole box is clickable through the label */
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-inline: 0.75rem;
+  min-height: 48px;
+  border: 2px solid #d9c9b3;
+  border-radius: 8px;
+}
+
+.choice input {
+  width: 1.25rem;
+  min-height: auto;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--color-primary);   /* colours the ticks and dots */
+}
+
+.choice label {
+  flex: 1;
+  padding-block: 0.6rem;           /* makes the clickable label taller */
+  font-weight: 500;
+}
+
+/* Highlight the option that is chosen (:has = "a .choice that HAS a checked input") */
+.choice:has(input:checked) {
+  border-color: var(--color-primary);
+  background-color: #fbefe8;
+}
+
+/* BUTTONS */
+.form-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+button {
+  font: inherit;
+  font-weight: 700;
+  min-height: 48px;
+  padding: 0.75rem 2rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+}
+
+.button-secondary:hover {
+  background-color: #fbefe8;
+  color: var(--color-primary-dark);
+}
+
+
+/* =====================================================================
+   11. FOOTER
+   ===================================================================== */
+.site-footer {
+  padding: calc(var(--space) * 1.5) max(1rem, (100% - var(--max-width)) / 2);
+  background-color: var(--color-secondary);
+  color: #f3e9d8;
+  text-align: center;
+}
+
+.site-footer a {
+  color: var(--color-accent);      /* yellow on dark green: easy to read */
+  font-weight: 700;
+}
+
+.site-footer p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =====================================================================
+   12. RESPONSIVE RULES (media queries)
+   "min-width: 768px" means: these rules apply on screens 768px or WIDER.
+   ===================================================================== */
+
+/* ---------- TABLETS (768px and up) ---------- */
+@media (min-width: 768px) {
+
+  /* Hours & address side by side (2-column grid) */
+  #hours {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  #hours > h2 {
+    grid-column: 1 / -1;           /* heading spans both columns */
+  }
+
+  /* Short form fields in two columns */
+  fieldset:not(.choices) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
+  }
+
+  /* ...but long things (email, the options, the textarea) use the full width */
+  fieldset:not(.choices) > .field:has(textarea),
+  fieldset:not(.choices) > .choices,
+  fieldset:not(.choices) > .field:has(#email) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- LAPTOPS (1000px and up) ---------- */
+@media (min-width: 1000px) {
+
+  :root {
+    --header-height: 5.5rem;       /* the header is shorter now (one row) */
+  }
+
+  /* Header becomes ONE row: name on the left, menu on the right */
+  .site-header {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .site-header nav ul {
+    justify-content: flex-end;     /* push the links to the right */
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding-bottom: 0;
+    mask-image: none;              /* all links fit now, so no fade needed */
+  }
+
+  .site-header nav a {
+    padding: 0.55rem 0.7rem;       /* a little tighter so all 7 links fit on one row */
+    font-size: 0.95rem;
+  }
+
+  /* ABOUT: CSS GRID with 2 columns – text on the left, photo on the right */
+  #about {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  #about > h2 {
+    grid-column: 1 / -1;           /* heading across both columns */
+  }
+
+  #about > img {
+    grid-column: 2;                /* photo in the right column... */
+    grid-row: 2 / span 7;          /* ...next to all 7 text blocks */
+    margin-bottom: 0;
+  }
+
+  #about > :not(h2):not(img) {
+    grid-column: 1;                /* all text in the left column */
+  }
+}
+
+/* ---------- WINDOWS "HIGH CONTRAST" MODE ----------
+   Some people use forced colours. Shadows disappear there, so we add real borders. */
+@media (forced-colors: active) {
+  #menu article,
+  #reviews article,
+  #specials aside,
+  address,
+  .table-wrapper {
+    border: 1px solid CanvasText;
+  }
+}

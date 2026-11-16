@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<!-- The doctype tells the browser this is an HTML5 document -->
+<html lang="en"> <!-- lang="en" tells screen readers which language to pronounce -->
+<head>
+  <!-- HEAD: information ABOUT the page (not shown on the page itself) -->
+  <meta charset="UTF-8">
+  <!-- viewport: makes the page fit phone screens instead of showing a tiny desktop page -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mama Pearl's Kitchen - fresh local food in Kampala">
+  <title>Mama Pearl's Kitchen | Home</title>
+
+  <!-- NEW: link connects this page to our CSS file (all the design lives there).
+       href = where the CSS file is, relative to this index.html file. -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <!-- BODY: everything visible on the page lives here -->
+
+  <!-- ============ HEADER: top of the page / site intro ============ -->
+  
+  <header id="top" class="site-header">
+    <!-- NEW: div with a class: a plain box we use only for layout (groups the name and tagline) -->
+    <div class="brand">
+      <h1>Mama Pearl's Kitchen</h1>
+      <p class="tagline"><em>Fresh local food, cooked with love since 2010.</em></p>
+    </div>
+
+    <!-- NAV: a group of navigation links. Links below jump to sections via id -->
+    
+    <nav>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#prices">Prices</a></li>
+        <li><a href="#specials">Specials</a></li>
+        <li><a href="#hours">Opening Hours</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#reserve" class="nav-cta">Reserve a Table</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ============ MAIN: the main content of the page ============ -->
+  <!-- tabindex="-1" lets the browser move keyboard focus here after the jump. -->
+  <main id="main" tabindex="-1">
+
+    <!-- ---------- ABOUT -->
+    <section id="about">
+      <h2>About Us</h2>
+      
+      <img src="images/restaurant.jpg" alt="Inside our restaurant: blue velvet chairs, wooden tables and paper lanterns" width="960" height="650">
+
+      <p>
+        Welcome to <strong>Mama Pearl's Kitchen</strong>, where every meal feels like
+        <em>home</em>. We use only <mark>fresh, locally grown</mark> ingredients.
+      </p>
+      <p>
+        Our story began in a tiny kitchen with one pot and a big dream.<br>
+        Today, we serve over 200 guests every week.
+      </p>
+
+      
+      <h3>Our Promise</h3>
+      <p>Good food, fair prices, and a warm welcome.</p>
+      <h4>Our Chefs</h4>
+      <p>Trained locally and abroad, led by Chef Pearl Nakato.</p>
+
+      
+      <blockquote>
+        <p>"Cooking is love made visible."</p>
+        <footer>— <cite>Chef Pearl Nakato</cite></footer>
+      </blockquote>
+    </section>
+
+    
+
+    <!-- ---------- MENU:  ---------- -->
+    <section id="menu">
+      <h2>Our Menu</h2>
+
+      <!-- article:  (one dish group here) -->
+      <article>
+        <h3>Starters</h3>
+
+        <!-- figure + figcaption: an image with a caption -->
+        <figure>
+          <img src="images/samosas.jpg" alt="A golden samosa on a steel plate with a small bowl of chilli dip" width="957" height="1280">
+          <figcaption>Crispy beef samosas served with chilli dip.</figcaption>
+        </figure>
+
+        <!-- ul = unordered (bulleted) list, li = list item -->
+        <ul>
+          <li>Beef Samosas</li>
+          <li>Vegetable Spring Rolls</li>
+          <li>Grilled Corn on the Cob</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Main Dishes</h3>
+
+        <figure>
+          <img src="images/luwombo.jpg" alt="Chicken luwombo: an opened banana-leaf parcel full of chicken stew" width="960" height="636">
+          <figcaption>Chicken Luwombo, steamed in banana leaves.</figcaption>
+        </figure>
+
+        
+        <ul>
+          <li>Chicken Luwombo</li>
+          <li>Grilled Tilapia with Rice</li>
+          <li>Matooke with Groundnut Sauce</li>
+          <li>Rolex (chapati &amp; egg wrap)</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Desserts</h3>
+
+        <figure>
+          <img src="images/fruit-salad.jpg" alt="A steel plate of watermelon, apple and banana pieces" width="960" height="1280">
+          <figcaption>Fresh tropical fruit salad.</figcaption>
+        </figure>
+
+        <ul>
+          <li>Fruit Salad</li>
+          <li>Banana Fritters</li>
+          <li>Vanilla Ice Cream</li>
+        </ul>
+      </article>
+
+      <!-- NEW: a div with a class groups "How to Order" and the glossary,
+           so CSS Grid can place them side by side on bigger screens. -->
+      <div class="menu-extras">
+        <div>
+          <!-- ol = ordered (numbered) list: good when the order matters -->
+          <h3>How to Order</h3>
+          <ol>
+            <li>Choose a table.</li>
+            <li>Pick your meal from the menu.</li>
+            <li>Tell your waiter your order.</li>
+            <li>Enjoy your food!</li>
+          </ol>
+        </div>
+
+        <div>
+          <!-- dl = description list: terms (dt) and their descriptions (dd) -->
+          <h3>Menu Glossary</h3>
+          <dl>
+            <dt>Luwombo</dt>
+            <dd>A traditional dish steamed inside banana leaves.</dd>
+            <dt>Matooke</dt>
+            <dd>Steamed, mashed green bananas.</dd>
+            <dt>Rolex</dt>
+            <dd>A chapati rolled around a fried egg and vegetables.</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- PRICES: table ---------- -->
+    <section id="prices">
+      <h2>Price List</h2>
+
+      <!-- NEW: this div lets the table scroll sideways on very small screens instead of
+           squashing it. tabindex="0" lets keyboard users scroll it; role="region" plus
+           aria-labelledby gives screen readers a name for it (the table's caption). -->
+      <div class="table-wrapper" tabindex="0" role="region" aria-labelledby="price-caption">
+        <!-- table: data in rows and columns -->
+        <!-- NEW: border="1" removed. CSS now draws the table lines. -->
+        <table>
+          <caption id="price-caption">Our most popular dishes</caption>
+          <thead>
+            <tr>
+              <!-- NEW: scope="col" tells screen readers this header belongs to its column -->
+              <th scope="col">Dish</th>
+              <th scope="col">Category</th>
+              <th scope="col">Price (UGX)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <!-- NEW: the dish name is a row header (th scope="row"), so a screen reader
+                   says "Beef Samosas, Price 5,000" instead of just "5,000" -->
+              <th scope="row">Beef Samosas</th>
+              <td>Starter</td>
+              <td>5,000</td>
+            </tr>
+            <tr>
+              <th scope="row">Chicken Luwombo</th>
+              <td>Main</td>
+              <td>25,000</td>
+            </tr>
+            <tr>
+              <th scope="row">Grilled Tilapia</th>
+              <td>Main</td>
+              <td>30,000</td>
+            </tr>
+            <tr>
+              <th scope="row">Fruit Salad</th>
+              <td>Dessert</td>
+              <td>8,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- small: side notes / fine print.  del: removed text.  sup: superscript -->
+      <p><small>Prices include 18% VAT.<sup>*</sup> Old price of Luwombo: <del>UGX 28,000</del>.</small></p>
+    </section>
+
+    <!-- ---------- SPECIALS: aside, abbr, time, links ---------- -->
+    <section id="specials">
+      <h2>Weekly Specials</h2>
+
+      <!-- aside: content related to, but separate from, the main content -->
+      <aside>
+        <h3>Special Offer!</h3>
+        <p>
+          Every <time datetime="2026-11-13">Friday</time> enjoy
+          <strong>2 Rolex for the price of 1</strong>.
+        </p>
+        <p>
+          Order by phone or visit our
+          <!-- NEW: rel="noopener noreferrer" is a safety habit for links that open a new tab -->
+          <a href="#" target="_blank" rel="noopener noreferrer">specials page</a>
+          
+        </p>
+        <p>All our meals are <abbr title="Fresh Ingredients Only">FIO</abbr> certified.</p>
+      </aside>
+    </section>
+
+    <!-- ---------- HOURS: another table-free look at time + address ---------- -->
+    <section id="hours">
+      <h2>Opening Hours &amp; Location</h2>
+      <ul>
+        <li>Monday - Friday: <time datetime="08:00">8:00 AM</time> - <time datetime="22:00">10:00 PM</time></li>
+        <li>Saturday - Sunday: <time datetime="10:00">10:00 AM</time> - <time datetime="23:00">11:00 PM</time></li>
+      </ul>
+
+      <!-- address: contact information -->
+      <address>
+        Mama Pearl's Kitchen<br>
+        Plot 12, Kampala Road<br>
+        Kampala, Uganda<br>
+        Phone: <a href="tel:+256703993262">+256 703 993262</a><br>
+        Email: <a href="mailto:hello@mamapearls.example">hello@mamapearls.example</a>
+      </address>
+    </section>
+
+    <!-- ---------- REVIEWS ---------- -->
+    <section id="reviews">
+      <h2>What Our Customers Say</h2>
+
+      <article>
+        <h3>"Best luwombo in town!"</h3>
+        <p><strong>Sarah K.</strong> - <time datetime="2026-10-02">2 October 2026</time></p>
+        <p>The chicken was so tender and the service was wonderful.</p>
+      </article>
+
+      <article>
+        <h3>"A great place for families"</h3>
+        <p><strong>David M.</strong> - <time datetime="2026-09-15">15 September 2026</time></p>
+        <p>The kids loved the fruit salad. We will be back!</p>
+      </article>
+    </section>
+
+    <!-- ---------- RESERVATION: form elements ---------- -->
+    <section id="reserve">
+      <h2>Reserve a Table</h2>
+
+      <!-- NEW: tell everyone what the * means (not only screen-reader users) -->
+      <p class="form-note">Fields marked with <span class="required-mark" aria-hidden="true">*</span> are required.</p>
+
+      <!-- form: collects information from the user -->
+      <form action="#" method="post">
+
+        <!-- fieldset + legend: group related fields together with a title -->
+        <fieldset>
+          <legend>Your Details</legend>
+
+          <!-- label is linked to its input using for="" and id="" -->
+          <!-- NEW: each label + input pair sits in a div with class "field" for layout.
+               autocomplete="..." lets phones and browsers fill in saved details
+               (a big help for people with motor or memory difficulties). -->
+          <div class="field">
+            <label for="name">Full name: <span class="required-mark" aria-hidden="true">*</span></label>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email: <span class="required-mark" aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel">
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Booking Details</legend>
+
+          <div class="field">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date">
+          </div>
+          <div class="field">
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time">
+          </div>
+          <div class="field">
+            <label for="guests">Number of guests:</label>
+            <input type="number" id="guests" name="guests" min="1" max="20" value="2">
+          </div>
+
+          <!-- select + option: dropdown list -->
+          <div class="field">
+            <label for="seating">Seating:</label>
+            <select id="seating" name="seating">
+              <option value="indoor">Indoor</option>
+              <option value="outdoor">Outdoor</option>
+              <option value="private">Private room</option>
+            </select>
+          </div>
+
+          <!-- radio buttons: choose only ONE (same name) -->
+          <!-- NEW: a group of radio buttons gets its own fieldset + legend, so a screen
+               reader says "Occasion, Birthday, radio button" instead of just "Birthday". -->
+          <fieldset class="choices">
+            <legend>Occasion:</legend>
+            <div class="choice">
+              <input type="radio" id="casual" name="occasion" value="casual" checked>
+              <label for="casual">Casual</label>
+            </div>
+            <div class="choice">
+              <input type="radio" id="birthday" name="occasion" value="birthday">
+              <label for="birthday">Birthday</label>
+            </div>
+            <div class="choice">
+              <input type="radio" id="business" name="occasion" value="business">
+              <label for="business">Business</label>
+            </div>
+          </fieldset>
+
+          <!-- checkboxes: choose MANY -->
+          <fieldset class="choices">
+            <legend>Extras:</legend>
+            <div class="choice">
+              <input type="checkbox" id="cake" name="extras" value="cake">
+              <label for="cake">Birthday cake</label>
+            </div>
+            <div class="choice">
+              <input type="checkbox" id="highchair" name="extras" value="highchair">
+              <label for="highchair">High chair</label>
+            </div>
+            <div class="choice">
+              <input type="checkbox" id="vegetarian" name="extras" value="vegetarian">
+              <label for="vegetarian">Vegetarian menu</label>
+            </div>
+          </fieldset>
+
+          <!-- textarea: multi-line text -->
+          <!-- NEW: the hint is now visible text linked with aria-describedby, because
+               placeholder text disappears as soon as you start typing. -->
+          <div class="field">
+            <label for="notes">Special requests:</label>
+            <span id="notes-hint" class="hint">For example: allergies or a celebration.</span>
+            <textarea id="notes" name="notes" rows="4" aria-describedby="notes-hint"></textarea>
+          </div>
+        </fieldset>
+
+        <!-- button: submit sends the form, reset clears it -->
+        <div class="form-buttons">
+          <button type="submit">Book Now</button>
+          <button type="reset" class="button-secondary">Clear</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER: bottom of the page ============ -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Mama Pearl's Kitchen. All rights reserved.</p>
+    <p><small><sup>*</sup> Prices may change without notice.</small></p>
+    <p><a href="#top">Back to top</a></p>
+ 
+  </footer>
+
+</body>
+</html>
